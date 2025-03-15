@@ -1,0 +1,380 @@
+openapi: 3.0.0
+info:
+  title: User Service API
+  version: 1.0.0
+  description: API for managing users in the e-commerce platform.
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+paths:
+  /users:
+    get:
+      summary: List all users
+      description: Retrieve a list of all users with optional filtering and pagination.
+      parameters:
+        - name: limit
+          in: query
+          description: Limit the number of users returned (default is 10).
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          description: Offset for pagination (default is 0).
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new user
+      description: Create a new user with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}:
+    get:
+      summary: Get a user by ID
+      description: Retrieve detailed information about a specific user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to retrieve.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a user
+      description: Update the details of an existing user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to update.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a user
+      description: Delete a user by their ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to delete.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: User deleted successfully.
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}/addresses:
+    get:
+      summary: Get user addresses
+      description: Retrieve all addresses associated with a user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to retrieve addresses for.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User addresses retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Address'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Add a new address for a user
+      description: Add a new address to a user's profile.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to add an address for.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressCreateRequest'
+      responses:
+        '201':
+          description: Address added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: "u1v2w3x4-y5z6-7890-a1b2-c3d4e5f6g7h8"
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "johndoe@example.com"
+        phoneNumber:
+          type: string
+          example: "+1-555-123-4567"
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+      required:
+        - userId
+        - name
+        - email
+        - phoneNumber
+    Address:
+      type: object
+      properties:
+        addressId:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-g1h2-i3j4k5l6m7n8"
+        street:
+          type: string
+          example: "123 Main St"
+        city:
+          type: string
+          example: "Springfield"
+        state:
+          type: string
+          example: "IL"
+        postalCode:
+          type: string
+          example: "62704"
+        country:
+          type: string
+          example: "USA"
+        isPrimary:
+          type: boolean
+          example: true
+      required:
+        - addressId
+        - street
+        - city
+        - state
+        - postalCode
+        - country
+    UserCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "johndoe@example.com"
+        phoneNumber:
+          type: string
+          example: "+1-555-123-4567"
+        password:
+          type: string
+          example: "securepassword123"
+      required:
+        - name
+        - email
+        - phoneNumber
+        - password
+    UserUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "johndoe@example.com"
+        phoneNumber:
+          type: string
+          example: "+1-555-123-4567"
+      required:
+        - name
+        - email
+        - phoneNumber
+    AddressCreateRequest:
+      type: object
+      properties:
+        street:
+          type: string
+          example: "123 Main St"
+        city:
+          type: string
+          example: "Springfield"
+        state:
+          type: string
+          example: "IL"
+        postalCode:
+          type: string
+          example: "62704"
+        country:
+          type: string
+          example: "USA"
+        isPrimary:
+          type: boolean
+          example: true
+      required:
+        - street
+        - city
+        - state
+        - postalCode
+        - country
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "User not found."
+      required:
+        - code
+        - message

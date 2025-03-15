@@ -1,0 +1,1 @@
+image::architecutre/architecture.png[Architecture Overview,width=800,alt="System Architecture"]

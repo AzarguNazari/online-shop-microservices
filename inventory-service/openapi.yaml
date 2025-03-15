@@ -1,0 +1,305 @@
+openapi: 3.0.0
+info:
+  title: Inventory Service API
+  version: 1.0.0
+  description: API for managing inventory and stock levels in the e-commerce platform.
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+paths:
+  /inventory:
+    get:
+      summary: List all inventory items
+      description: Retrieve a list of all inventory items with optional filtering and pagination.
+      parameters:
+        - name: productId
+          in: query
+          description: Filter inventory items by product ID.
+          schema:
+            type: string
+            format: uuid
+        - name: lowStock
+          in: query
+          description: Filter inventory items with low stock levels (below the threshold).
+          schema:
+            type: boolean
+        - name: limit
+          in: query
+          description: Limit the number of inventory items returned (default is 10).
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          description: Offset for pagination (default is 0).
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: A list of inventory items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Inventory'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new inventory item
+      description: Create a new inventory item with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryCreateRequest'
+      responses:
+        '201':
+          description: Inventory item created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /inventory/{productId}:
+    get:
+      summary: Get inventory by product ID
+      description: Retrieve detailed information about a specific inventory item by product ID.
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to retrieve inventory for.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Inventory details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '404':
+          description: Inventory item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update inventory
+      description: Update the details of an existing inventory item.
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to update inventory for.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryUpdateRequest'
+      responses:
+        '200':
+          description: Inventory updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Inventory item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete inventory
+      description: Delete an inventory item by product ID.
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to delete inventory for.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Inventory deleted successfully.
+        '404':
+          description: Inventory item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /inventory/{productId}/stock:
+    patch:
+      summary: Update stock level
+      description: Update the stock level of an existing inventory item.
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to update stock for.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryStockUpdateRequest'
+      responses:
+        '200':
+          description: Stock level updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Inventory item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Inventory:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+          example: "p1q2r3s4-t5u6-7890-v1w2-x3y4z5a6b7c8"
+        stockLevel:
+          type: integer
+          example: 50
+        reservedStock:
+          type: integer
+          example: 5
+        lastUpdated:
+          type: string
+          format: date-time
+          example: "2023-10-25T12:00:00Z"
+        lowStockThreshold:
+          type: integer
+          example: 10
+        isBackordered:
+          type: boolean
+          example: false
+      required:
+        - productId
+        - stockLevel
+        - reservedStock
+        - lastUpdated
+    InventoryCreateRequest:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+          example: "p1q2r3s4-t5u6-7890-v1w2-x3y4z5a6b7c8"
+        stockLevel:
+          type: integer
+          example: 50
+        lowStockThreshold:
+          type: integer
+          example: 10
+      required:
+        - productId
+        - stockLevel
+    InventoryUpdateRequest:
+      type: object
+      properties:
+        stockLevel:
+          type: integer
+          example: 50
+        reservedStock:
+          type: integer
+          example: 5
+        lowStockThreshold:
+          type: integer
+          example: 10
+        isBackordered:
+          type: boolean
+          example: false
+      required:
+        - stockLevel
+    InventoryStockUpdateRequest:
+      type: object
+      properties:
+        stockLevel:
+          type: integer
+          example: 50
+      required:
+        - stockLevel
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Inventory item not found."
+      required:
+        - code
+        - message
