@@ -1,0 +1,7 @@
+mongodb:
+  image: mongo:latest
+  ports:
+    - "28017:27017" # Maps container port 27017 to host port 28017
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: "your_username" # Set your desired username
+    MONGO_INITDB_ROOT_PASSWORD: "your_password" # Set your desired password
