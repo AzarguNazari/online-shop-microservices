@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  title: Analytics Service API
+  version: 1.0.0
+  description: API for managing analytics and reporting in the e-commerce platform.
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+paths:
+  /analytics/sales:
+    get:
+      summary: Get sales analytics
+      description: Retrieve sales analytics data with optional filtering by date range, region, and product category.
+      parameters:
+        - name: startDate
+          in: query
+          description: Start date for filtering sales data (inclusive).
+          schema:
+            type: string
+            format: date
+            example: "2023-10-01"
+        - name: endDate
+          in: query
+          description: End date for filtering sales data (inclusive).
+          schema:
+            type: string
+            format: date
+            example: "2023-10-31"
+        - name: region
+          in: query
+          description: Filter sales data by region.
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filter sales data by product category.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sales analytics data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalesAnalytics'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /analytics/customer:
+    get:
+      summary: Get customer analytics
+      description: Retrieve customer analytics data with optional filtering by date range and region.
+      parameters:
+        - name: startDate
+          in: query
+          description: Start date for filtering customer data (inclusive).
+          schema:
+            type: string
+            format: date
+            example: "2023-10-01"
+        - name: endDate
+          in: query
+          description: End date for filtering customer data (inclusive).
+          schema:
+            type: string
+            format: date
+            example: "2023-10-31"
+        - name: region
+          in: query
+          description: Filter customer data by region.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer analytics data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerAnalytics'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /analytics/product:
+    get:
+      summary: Get product analytics
+      description: Retrieve product analytics data with optional filtering by date range and category.
+      parameters:
+        - name: startDate
+          in: query
+          description: Start date for filtering product data (inclusive).
+          schema:
+            type: string
+            format: date
+            example: "2023-10-01"
+        - name: endDate
+          in: query
+          description: End date for filtering product data (inclusive).
+          schema:
+            type: string
+            format: date
+            example: "2023-10-31"
+        - name: category
+          in: query
+          description: Filter product data by category.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product analytics data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductAnalytics'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    SalesAnalytics:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2023-10-25"
+        totalSales:
+          type: number
+          format: float
+          example: 1999.99
+        region:
+          type: string
+          example: "North America"
+        category:
+          type: string
+          example: "Electronics"
+      required:
+        - date
+        - totalSales
+    CustomerAnalytics:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2023-10-25"
+        newCustomers:
+          type: integer
+          example: 50
+        returningCustomers:
+          type: integer
+          example: 120
+        region:
+          type: string
+          example: "North America"
+      required:
+        - date
+        - newCustomers
+        - returningCustomers
+    ProductAnalytics:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2023-10-25"
+        productId:
+          type: string
+          format: uuid
+          example: "p1q2r3s4-t5u6-7890-v1w2-x3y4z5a6b7c8"
+        productName:
+          type: string
+          example: "Wireless Noise-Cancelling Headphones"
+        category:
+          type: string
+          example: "Electronics"
+        unitsSold:
+          type: integer
+          example: 25
+        totalRevenue:
+          type: number
+          format: float
+          example: 2249.75
+      required:
+        - date
+        - productId
+        - productName
+        - category
+        - unitsSold
+        - totalRevenue
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: "Internal server error."
+      required:
+        - code
+        - message
