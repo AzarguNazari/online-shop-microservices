@@ -1,0 +1,124 @@
+###
+GET http://localhost:8087/analytics/sales?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    region=North&
+    category=Electronics
+
+###
+GET http://localhost:8087/analytics/sales?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    region=South
+
+###
+GET http://localhost:8087/analytics/sales?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    category=Electronics
+
+###
+GET http://localhost:8087/analytics/sales?
+    startDate=2023-01-01&
+    endDate=2023-12-31
+
+###
+GET http://localhost:8087/analytics/customer?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    region=North
+
+###
+GET http://localhost:8087/analytics/customer?
+    startDate=2023-01-01&
+    endDate=2023-12-31
+
+###
+GET http://localhost:8087/analytics/product?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    category=Electronics
+
+###
+GET http://localhost:8087/analytics/product?
+    startDate=2023-01-01&
+    endDate=2023-12-31
+
+###
+GET http://localhost:8087/analytics/sales?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    region=InvalidRegion&
+    category=InvalidCategory
+
+###
+GET http://localhost:8087/analytics/customer?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    region=InvalidRegion
+
+###
+GET http://localhost:8087/analytics/product?
+    startDate=2023-01-01&
+    endDate=2023-12-31&
+    category=InvalidCategory
+
+###
+GET http://localhost:8087/analytics/sales?
+    startDate=invalid-date&
+    endDate=invalid-date&
+    region=North&
+    category=Electronics
+
+###
+GET http://localhost:8087/analytics/customer?
+    startDate=invalid-date&
+    endDate=invalid-date&
+    region=North
+
+###
+GET http://localhost:8087/analytics/product?
+    startDate=invalid-date&
+    endDate=invalid-date&
+    category=Electronics
+
+###
+GET http://localhost:8087/analytics/nonexistent-endpoint
+
+###
+POST http://localhost:8087/analytics/sales
+Content-Type: application/json
+
+{
+  "id": "123",
+  "date": "2023-01-01",
+  "totalSales": 1000.0,
+  "region": "North",
+  "category": "Electronics"
+}
+
+###
+POST http://localhost:8087/analytics/customer
+Content-Type: application/json
+
+{
+  "id": "123",
+  "date": "2023-01-01",
+  "newCustomers": 10,
+  "returningCustomers": 5,
+  "region": "North"
+}
+
+###
+POST http://localhost:8087/analytics/product
+Content-Type: application/json
+
+{
+  "id": "123",
+  "date": "2023-01-01",
+  "productId": "456",
+  "productName": "Smartphone",
+  "category": "Electronics",
+  "unitsSold": 100,
+  "totalRevenue": 50000.0
+}
