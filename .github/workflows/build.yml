@@ -4,12 +4,10 @@ name: Analytics Service CI/CD
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'analytics-service/**'
+    # Removed path filters temporarily
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'analytics-service/**'
+    # Removed path filters temporarily
 
 permissions:
   contents: read
@@ -35,6 +33,9 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
+
+      - name: Make Gradlew Executable
+        run: chmod +x ./analytics-service/gradlew
 
       - name: Build with Gradle
         working-directory: ./analytics-service
