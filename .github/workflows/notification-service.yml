@@ -51,7 +51,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: inventory-test-results
+          name: notification-test-results
           path: notification-service/build/reports/tests/
 
       - name: Upload build artifacts
