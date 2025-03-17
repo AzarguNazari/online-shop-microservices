@@ -1,5 +1,10 @@
 package org.example.analytics;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
@@ -7,9 +12,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -29,13 +32,14 @@ public class AnalyticsServiceApplication {
 
 }
 
-
 @Setter
 @Getter
-@Document(collection = "salesAnalytics")
+@Entity
+@Table(name = "sales_analytics")
 class SalesAnalytics {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private LocalDate date;
     private double totalSales;
     private String region;
@@ -44,10 +48,12 @@ class SalesAnalytics {
 
 @Setter
 @Getter
-@Document(collection = "customerAnalytics")
+@Entity
+@Table(name = "customer_analytics")
 class CustomerAnalytics {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private LocalDate date;
     private int newCustomers;
     private int returningCustomers;
@@ -56,10 +62,12 @@ class CustomerAnalytics {
 
 @Setter
 @Getter
-@Document(collection = "productAnalytics")
+@Entity
+@Table(name = "product_analytics")
 class ProductAnalytics {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private LocalDate date;
     private String productId;
     private String productName;
@@ -75,20 +83,18 @@ class Error {
     private String message;
 }
 
-
 @Repository
-interface SalesAnalyticsRepository extends MongoRepository<SalesAnalytics, String> {
+interface SalesAnalyticsRepository extends JpaRepository<SalesAnalytics, Long> {
     List<SalesAnalytics> findByDateBetweenAndRegionAndCategory(LocalDate startDate, LocalDate endDate, String region, String category);
 }
 
 @Repository
-interface CustomerAnalyticsRepository extends MongoRepository<CustomerAnalytics, String> {
+interface CustomerAnalyticsRepository extends JpaRepository<CustomerAnalytics, Long> {
     List<CustomerAnalytics> findByDateBetweenAndRegion(LocalDate startDate, LocalDate endDate, String region);
 }
 
-
 @Repository
-interface ProductAnalyticsRepository extends MongoRepository<ProductAnalytics, String> {
+interface ProductAnalyticsRepository extends JpaRepository<ProductAnalytics, Long> {
     List<ProductAnalytics> findByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, String category);
 }
 
