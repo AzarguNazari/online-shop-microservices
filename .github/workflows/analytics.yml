@@ -4,10 +4,12 @@ name: Analytics Service CI/CD
 on:
   push:
     branches: [ "main" ]
-    # Removed path filters temporarily
+    paths:
+      - 'analytics-service/**'
   pull_request:
     branches: [ "main" ]
-    # Removed path filters temporarily
+    paths:
+      - 'analytics-service/**'
 
 permissions:
   contents: read
