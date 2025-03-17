@@ -1,5 +1,5 @@
 # .github/workflows/order-service.yml
-name: User Service CI/CD
+name: Order Service CI/CD
 
 on:
   push:

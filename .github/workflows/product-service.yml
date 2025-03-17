@@ -1,5 +1,5 @@
 # .github/workflows/product-service.yml
-name: User Service CI/CD
+name: Product Service CI/CD
 
 on:
   push:

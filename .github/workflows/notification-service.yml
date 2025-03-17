@@ -1,5 +1,5 @@
 # .github/workflows/notification-service.yml
-name: User Service CI/CD
+name: Notification Service CI/CD
 
 on:
   push:
