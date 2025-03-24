@@ -1,4 +1,4 @@
-package org.example.user.model;
+package org.example.user.infrastructure.adapter.persistence;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
