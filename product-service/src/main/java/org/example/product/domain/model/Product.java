@@ -2,20 +2,19 @@ package org.example.product.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.util.UUID;
+import java.math.BigDecimal;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Product {
     private String productId;
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
     private String category;
     private int stockLevel;
     private String brand;
@@ -25,7 +24,7 @@ public class Product {
     public static Product create(
             String name,
             String description,
-            double price,
+            BigDecimal price,
             String category,
             int stockLevel,
             String brand,
@@ -52,7 +51,7 @@ public class Product {
     public void update(
             String name,
             String description,
-            double price,
+            BigDecimal price,
             String category,
             String brand,
             String sku,

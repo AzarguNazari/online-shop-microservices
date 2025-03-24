@@ -4,21 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import org.example.product.domain.model.Product;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.math.BigDecimal;
 
 @Document(collection = "products")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class MongoProductEntity {
     @Id
     private String productId;
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
     private String category;
     private int stockLevel;
     private String brand;

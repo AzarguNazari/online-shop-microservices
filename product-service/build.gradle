@@ -30,9 +30,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-// test cicd
-
-
 hibernate {
     enhancement {
         enableAssociationManagement = true

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,21 +21,21 @@ public class ProductService implements ProductUseCase {
     @Override
     public List<Product> getAllProducts(String category, int limit, int offset) {
         return productPort.findAll();
-        // TODO: Implement filtering by category and pagination
     }
 
     @Override
     public Product createProduct(CreateProductCommand command) {
-        Product product = Product.create(
-            command.name(),
-            command.description(),
-            command.price(),
-            command.category(),
-            command.stockLevel(),
-            command.brand(),
-            command.sku(),
-            command.imageUrl()
-        );
+        Product product = Product.builder()
+                .productId(UUID.randomUUID().toString())
+                .name(command.name())
+                .description(command.description())
+                .price(command.price())
+                .category(command.category())
+                .stockLevel(command.stockLevel())
+                .brand(command.brand())
+                .sku(command.sku())
+                .imageUrl(command.imageUrl())
+                .build();
         return productPort.save(product);
     }
 

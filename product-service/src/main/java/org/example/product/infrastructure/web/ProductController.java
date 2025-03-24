@@ -1,14 +1,15 @@
 package org.example.product.infrastructure.web;
 
 import lombok.RequiredArgsConstructor;
-import org.example.product.application.port.in.CreateProductCommand;
 import org.example.product.application.port.in.ProductUseCase;
+import org.example.product.domain.model.Product;
+import org.example.product.application.port.in.CreateProductCommand;
 import org.example.product.application.port.in.UpdateProductCommand;
 import org.example.product.application.port.in.UpdateStockCommand;
-import org.example.product.domain.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
 
 import java.util.List;
 
@@ -53,15 +54,16 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(
             @PathVariable String productId,
             @RequestBody UpdateProductRequest request) {
-        UpdateProductCommand command = new UpdateProductCommand(
-            request.name(),
-            request.description(),
-            request.price(),
-            request.category(),
-            request.brand(),
-            request.sku(),
-            request.imageUrl()
-        );
+        UpdateProductCommand command = UpdateProductCommand.builder()
+            .productId(productId)
+            .name(request.name())
+            .description(request.description())
+            .price(request.price())
+            .category(request.category())
+            .brand(request.brand())
+            .sku(request.sku())
+            .imageUrl(request.imageUrl())
+            .build();
         return productUseCase.updateProduct(productId, command)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -87,7 +89,7 @@ public class ProductController {
 record CreateProductRequest(
     String name,
     String description,
-    double price,
+    BigDecimal price,
     String category,
     int stockLevel,
     String brand,
@@ -98,7 +100,7 @@ record CreateProductRequest(
 record UpdateProductRequest(
     String name,
     String description,
-    double price,
+    BigDecimal price,
     String category,
     String brand,
     String sku,

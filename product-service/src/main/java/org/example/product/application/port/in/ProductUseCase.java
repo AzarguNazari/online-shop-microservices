@@ -13,26 +13,3 @@ public interface ProductUseCase {
     void deleteProduct(String productId);
     Optional<Product> updateProductStock(String productId, UpdateStockCommand command);
 }
-
-record CreateProductCommand(
-    String name,
-    String description,
-    double price,
-    String category,
-    int stockLevel,
-    String brand,
-    String sku,
-    String imageUrl
-) {}
-
-record UpdateProductCommand(
-    String name,
-    String description,
-    double price,
-    String category,
-    String brand,
-    String sku,
-    String imageUrl
-) {}
-
-record UpdateStockCommand(int stockLevel) {} 
