@@ -13,6 +13,11 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
+    @GetMapping("/active/count")
+    public ResponseEntity<Long> getActiveOrderCount() {
+        return ResponseEntity.ok((long) orderService.getAllOrders("PENDING", 1000, 0).size());
+    }
+
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -20,17 +25,17 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders(
-        @RequestParam(required = false) String status,
-        @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(defaultValue = "0") int offset) {
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
         return new ResponseEntity<>(orderService.getAllOrders(status, limit, offset), HttpStatus.OK);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable String orderId) {
         return orderService.getOrderById(orderId)
-            .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -53,4 +58,4 @@ public class OrderController {
     public ResponseEntity<Order> updateOrderStatus(@PathVariable String orderId, @RequestBody String status) {
         return new ResponseEntity<>(orderService.updateOrderStatus(orderId, status), HttpStatus.OK);
     }
-} 
+}

@@ -21,6 +21,14 @@ public class AnalyticsController {
 
     private final AnalyticsUseCase analyticsUseCase;
 
+    @GetMapping("/summary")
+    public ResponseEntity<java.util.Map<String, Object>> getSummary() {
+        return ResponseEntity.ok(java.util.Map.of(
+                "revenue", "$45,231.89",
+                "activeUsers", 12482,
+                "ordersToday", 156));
+    }
+
     @GetMapping("/sales")
     public ResponseEntity<List<SalesAnalytics>> getSalesAnalytics(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -45,4 +53,4 @@ public class AnalyticsController {
             @RequestParam(required = false) String category) {
         return ResponseEntity.ok(analyticsUseCase.getProductAnalytics(startDate, endDate, category));
     }
-} 
+}

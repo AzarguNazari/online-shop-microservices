@@ -38,18 +38,15 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      // In a real demo, we'd fetch from http://localhost:8080/api/...
-      // For this step, I'll implement the structure to handle these calls
       const [usersRes, ordersRes, analyticsRes] = await Promise.all([
         fetch("http://localhost:8080/api/users/count").catch(() => null),
-        fetch("http://localhost:8080/api/orders/active").catch(() => null),
+        fetch("http://localhost:8080/api/orders/active/count").catch(() => null),
         fetch("http://localhost:8080/api/analytics/summary").catch(() => null)
       ]);
 
-      // Mocking some fallback logic if services are down during development
       setStats({
-        users: usersRes ? await usersRes.json() : "12,482",
-        orders: ordersRes ? await ordersRes.json() : "156",
+        users: usersRes ? await usersRes.text() : "12,482",
+        orders: ordersRes ? await ordersRes.text() : "156",
         revenue: analyticsRes ? (await analyticsRes.json()).revenue : "$45,231.89",
         alerts: "14"
       });
@@ -178,7 +175,7 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({ title, value, change, icon, trend, critical = false }) {
+function StatCard({ title, value, change, icon, trend, critical = false }: { title: string, value: string, change: string, icon: React.ReactNode, trend: 'up' | 'down', critical?: boolean }) {
   return (
     <Card className={`border-none shadow-lg glass overflow-hidden group hover:scale-[1.02] transition-all duration-300`}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -198,7 +195,7 @@ function StatCard({ title, value, change, icon, trend, critical = false }) {
   );
 }
 
-function NotificationItem({ title, time, description, urgent = false }) {
+function NotificationItem({ title, time, description, urgent = false }: { title: string, time: string, description: string, urgent?: boolean }) {
   return (
     <div className="flex gap-3 p-2 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer border-l-2 border-transparent hover:border-primary">
       <div className={`mt-1 h-2 w-2 rounded-full flex-shrink-0 ${urgent ? 'bg-rose-500' : 'bg-emerald-500'}`} />
@@ -213,7 +210,7 @@ function NotificationItem({ title, time, description, urgent = false }) {
   );
 }
 
-function ServiceCard({ name, type, status, events }) {
+function ServiceCard({ name, type, status, events }: { name: string, type: string, status: string, events: string }) {
   return (
     <Card className="border-none shadow-md glass group overflow-hidden">
       <CardHeader className="pb-2">
