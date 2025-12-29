@@ -1,16 +1,17 @@
 package org.example.user.domain.model;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
-    String id;
-    String street;
-    String city;
-    String state;
-    String postalCode;
-    String country;
-    boolean primary;
-} 
+    private String id;
+    private String street;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
+    private boolean primaryAddress;
+}

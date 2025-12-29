@@ -1,24 +1,23 @@
 package org.example.user.infrastructure.adapter.persistence;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Document(collection = "addresses")
+@Entity
+@Table(name = "addresses")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class AddressEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String street;
     private String city;
     private String state;
     private String postalCode;
     private String country;
-    private boolean primary;
-} 
+    @Column(name = "primary_address")
+    private boolean primaryAddress;
+}

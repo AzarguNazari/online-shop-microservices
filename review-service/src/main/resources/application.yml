@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: review-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: review-db
+
+server:
+  port: 8087
+
+logging:
+  level:
+    org.example.review: DEBUG

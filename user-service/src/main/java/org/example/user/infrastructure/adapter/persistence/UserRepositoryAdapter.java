@@ -13,30 +13,30 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {
-    private final MongoUserRepository mongoUserRepository;
+    private final JpaUserRepository jpaUserRepository;
 
     @Override
     public List<User> findAll() {
-        return mongoUserRepository.findAll().stream()
+        return jpaUserRepository.findAll().stream()
                 .map(this::mapToUser)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<User> findById(String userId) {
-        return mongoUserRepository.findById(userId)
+        return jpaUserRepository.findById(userId)
                 .map(this::mapToUser);
     }
 
     @Override
     public User save(User user) {
         UserEntity userEntity = mapToUserEntity(user);
-        return mapToUser(mongoUserRepository.save(userEntity));
+        return mapToUser(jpaUserRepository.save(userEntity));
     }
 
     @Override
     public void deleteById(String userId) {
-        mongoUserRepository.deleteById(userId);
+        jpaUserRepository.deleteById(userId);
     }
 
     private User mapToUser(UserEntity userEntity) {
@@ -50,6 +50,8 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     private List<Address> mapToAddresses(List<AddressEntity> addressEntities) {
+        if (addressEntities == null)
+            return List.of();
         return addressEntities.stream()
                 .map(this::mapToAddress)
                 .collect(Collectors.toList());
@@ -63,7 +65,7 @@ public class UserRepositoryAdapter implements UserRepository {
                 .state(addressEntity.getState())
                 .postalCode(addressEntity.getPostalCode())
                 .country(addressEntity.getCountry())
-                .primary(addressEntity.isPrimary())
+                .primaryAddress(addressEntity.isPrimaryAddress())
                 .build();
     }
 
@@ -78,6 +80,8 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     private List<AddressEntity> mapToAddressEntities(List<Address> addresses) {
+        if (addresses == null)
+            return List.of();
         return addresses.stream()
                 .map(this::mapToAddressEntity)
                 .collect(Collectors.toList());
@@ -91,7 +95,7 @@ public class UserRepositoryAdapter implements UserRepository {
                 .state(address.getState())
                 .postalCode(address.getPostalCode())
                 .country(address.getCountry())
-                .primary(address.isPrimary())
+                .primaryAddress(address.isPrimaryAddress())
                 .build();
     }
-} 
+}
