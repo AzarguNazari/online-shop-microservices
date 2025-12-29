@@ -17,8 +17,37 @@ public class InventoryService {
         return inventory;
     }
 
-    public Optional<Inventory> getInventoryByProductId(String productId) {
+    public java.util.List<Inventory> getAllInventory(String productId, Boolean lowStock) {
+        if (productId != null) {
+            return inventoryRepository.findByProductId(productId)
+                    .map(java.util.List::of)
+                    .orElse(java.util.List.of());
+        }
+        java.util.List<Inventory> all = inventoryRepository.findAll();
+        if (Boolean.TRUE.equals(lowStock)) {
+            return all.stream().filter(Inventory::isLowStock).collect(java.util.stream.Collectors.toList());
+        }
+        return all;
+    }
+
+    public Optional<Inventory> getInventoryById(String productId) {
         return inventoryRepository.findByProductId(productId);
+    }
+
+    public Optional<Inventory> updateInventory(String productId, int stockLevel, int reservedStock,
+            int lowStockThreshold, boolean isBackordered) {
+        return inventoryRepository.findByProductId(productId).map(inventory -> {
+            inventory.setStockLevel(stockLevel);
+            inventory.setReservedStock(reservedStock);
+            inventory.setLowStockThreshold(lowStockThreshold);
+            inventory.setBackordered(isBackordered);
+            inventoryRepository.save(inventory);
+            return inventory;
+        });
+    }
+
+    public void deleteInventory(String productId) {
+        inventoryRepository.deleteByProductId(productId);
     }
 
     public Optional<Inventory> updateStockLevel(String productId, int newStockLevel) {

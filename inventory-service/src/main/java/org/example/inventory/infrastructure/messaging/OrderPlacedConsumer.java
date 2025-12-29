@@ -3,7 +3,7 @@ package org.example.inventory.infrastructure.messaging;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.inventory.domain.model.Inventory;
-import org.example.inventory.domain.port.spi.InventoryRepository;
+import org.example.inventory.domain.port.InventoryRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

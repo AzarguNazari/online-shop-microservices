@@ -19,8 +19,20 @@ public class InventoryRepositoryAdapter implements InventoryRepository {
     }
 
     @Override
+    public java.util.List<Inventory> findAll() {
+        return jpaInventoryRepository.findAll().stream()
+                .map(this::mapToDomain)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
     public void save(Inventory inventory) {
         jpaInventoryRepository.save(mapToEntity(inventory));
+    }
+
+    @Override
+    public void deleteByProductId(String productId) {
+        jpaInventoryRepository.deleteById(productId);
     }
 
     private Inventory mapToDomain(InventoryEntity entity) {
